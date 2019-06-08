@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Food;
 use App\Order;
 use App\Profile;
+use App\Company;
 
 class User extends Authenticatable
 {
@@ -31,6 +32,10 @@ class User extends Authenticatable
     public function food(){
         return $this->hasMany(Food::class);
     }
+
+    public function company(){
+      return $this->hasOne(Company::class);
+  }
 
     public function pesanans(){
       return $this->hasMany(Pesanan::class);

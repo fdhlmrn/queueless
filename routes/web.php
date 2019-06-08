@@ -40,6 +40,8 @@ Route::group(['middleware'=> ['auth']], function() {
     Route::patch('/foods/{food}', 'FoodsController@update');
     Route::delete('/foods/{food}/delete', 'FoodsController@destroy');
 
+    //company
+    Route::post('/foods/registercompany', 'FoodsController@registerCompany');
 
     //search
     Route::get('/search', 'SearchController@index');

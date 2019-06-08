@@ -14,9 +14,9 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th>#</th>
+                    {{-- <th>#</th> --}}
                     <th width="35%">Food's Name</th>
-                    <th width="15%">Serving Size</th>
+                    <th width="15%">By</th>
                     <th width="15%">Price(RM)</th>
                     <th width="15%">Location</th>
                     <th width="15%">Action</th>
@@ -26,11 +26,13 @@
                   <?php $i = 0 ?>
                   @forelse($foods as $food)
                     <tr>
-                      <td>{{ $loop->index }}</td>
-                      <td>{{ $food->nama_makanan }}</td>  
-                      <td>{{ $food->saiz_hidangan }}</td>
+                      {{-- <td>{{ $loop->index }}</td> --}}
+                      <td>
+                        {{ $food->nama_makanan }}
+                      </td>  
+                      <td>{{ $food->user->company->company_name }}</td>
                       <td>{{ $food->harga }}</td>
-                      <td>{{ $food->location }}</td>
+                      <td>{{ $food->user->company->location }}</td>
                       <td>
                         @if( $food->user_id == Auth::user()->id)
                           

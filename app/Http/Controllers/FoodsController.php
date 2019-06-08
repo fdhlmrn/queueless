@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 // use App\State;
 use Charts;
 use App\Cart;
+use App\Company;
 use App\Bought;
 use App\User;
 use App\Order;
@@ -46,10 +47,32 @@ class FoodsController extends Controller
 
     public function index()
     {
-        //
+        $company = Company::where('user_id', Auth::user()->id)->first();
+        if ($company == null) {
+            return view('jualan.register')->with('alertMsg', 'You need to add company to sell items');
+        }
+        else{
         $foods = Food::where('user_id', Auth::user()->id)->orderBy('created_at', 'asc')->paginate(7);
         // dd($foods);
         return view('jualan.index', compact('foods'));
+        }
+    }
+
+    public function registerCompany(Request $request)
+    {
+        // dd($request);
+        $company = new Company;
+        $company->company_name = $request->company_name;
+        $company->company_contact = $request->company_contact;
+        $company->location = $request->location;
+        $company->latitude = $request->latitude;
+        $company->longitude = $request->longitude;
+        $company->user_id = Auth::user()->id;
+
+        $company->save();
+
+        return redirect()->action('FoodsController@index')->withMessage('Company registered!');
+
     }
 
     /**
@@ -91,8 +114,6 @@ class FoodsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // dd($request);
         $food = new Food;
         $food->nama_makanan = $request->nama_makanan;
         $food->saiz_hidangan = $request->saiz_hidangan;
@@ -110,9 +131,7 @@ class FoodsController extends Controller
           $request->image->move(public_path('images/foods/'), $image);
           $food->image = $image;
         }
-        // dd($food);
         $food->save();
-      // dd($request->image);
 
         return redirect()->action('FoodsController@store')->withMessage('Food has been added');
 

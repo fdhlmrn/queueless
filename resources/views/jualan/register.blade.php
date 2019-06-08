@@ -1,43 +1,69 @@
 @extends('layouts.app')
+
 @section('content')
+@if(!empty($alertMsg))
+  <div class="alert alert-danger"> {{ $alertMsg }}</div>
+@endif
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Register</div>
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ action('FoodsController@registerCompany') }}">
+                        {{ csrf_field() }}
 
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2>Find Food</h2>
-          </div>
-    <div class="panel-body"> 
-      <div class="row">
-        <div class="col-md-10">
-        <form class="form-horizontal" action="{{ action('SearchController@find') }}" method="post" enctype="multipart/form-data">
-            {{ csrf_field() }}
-            <div class="form-group">
-              <label style="font-size: 15px;" class="col-md-3 control-label">Food's Name</label>
-              <div class="col-md-8">
-                  <input class="form-control" type="text" name="keyword" placeholder="Nama Makanan">
-              </div>
-            </div>
-            <div class="form-group">
-              <label style="font-size: 15px;" class="col-md-3 control-label">Location</label>
-              <div class="col-md-8">
-                  <input class="form-control" id="location" type="text" name="location">
-              </div>
-            </div>
-                <input class="form-control" id="latitude" type="hidden" name="latitude">
-                <input class="form-control" id="longitude" type="hidden" name="longitude">
-            <div class="form-group">
-                <div class="col-sm-offset-9 col-sm-10">
-                  <a href="{{ url('/home') }}" class="btn btn-info">List All</a>
-                  <button type="submit" class="btn btn-success">Search</button>
+                        <div class="form-group{{ $errors->has('company_name') ? ' has-error' : '' }}">
+                            <label for="company_name" class="col-md-4 control-label">Company Name</label>
+
+                            <div class="col-md-6">
+                                <input id="company_name" type="text" class="form-control" name="company_name" value="{{ old('company_name') }}" required autofocus>
+
+                                @if ($errors->has('company_name'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('company_name') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group{{ $errors->has('company_contact') ? ' has-error' : '' }}">
+                            <label for="company_contact" class="col-md-4 control-label">Company Contact</label>
+
+                            <div class="col-md-6">
+                                <input id="company_contact" type="company_contact" class="form-control" name="company_contact" value="{{ old('company_contact') }}" required>
+
+                                @if ($errors->has('company_contact'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('company_contact') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="location" class="col-md-4 control-label">Company's Address</label>
+
+                            <div class="col-md-6">
+                                <input class="form-control" id="location" type="text" name="location">
+                                <input class="form-control" id="latitude" type="hidden" name="latitude">
+                                <input class="form-control" id="longitude" type="hidden" name="longitude">                
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <button type="submit" class="btn btn-success">
+                                    Register
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-              </div>
-            </form>
-          </div>
+            </div>
         </div>
-      </div>
     </div>
-
-    {{-- csrf_field tu perlu untuk post, put, delete sahaja. --}}
-
+</div>
 
 @section('script')
     <script>
