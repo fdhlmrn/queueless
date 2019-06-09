@@ -37,14 +37,6 @@
                               </th>
                               <td>
                                   <h5><strong>{{$food->nama_makanan}}</strong></h5>
-                                  <p class="text-muted">by 
-                                  @if ($food->user->id == Auth::user()->id)
-                                  <a href="{{ action('ProfilesController@index')}}"> {{ $food->user->name }}</p></a>
-                                  @else
-                                  <a href="{{ action('ProfilesController@show', $food->user->id)}}"> {{ $food->user->name }}</p></a>
-                                  @endif
-
-
                                   <small class="">{{ $food->created_at->diffForHumans() }}</small>
 
                               </td>

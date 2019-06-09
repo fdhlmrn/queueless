@@ -16,9 +16,9 @@ class CreateCompanyTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->index()->unsigned();
-            $table->float('latitude');
-            $table->float('longitude');
-            $table->string('location')->nullable();
+            $table->float('latitude')->nullable();
+            $table->float('longitude')->nullable();
+            $table->string('location');
             $table->string('company_name');
             $table->integer('company_contact')->nullable();
             $table->timestamps();

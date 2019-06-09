@@ -74,7 +74,6 @@ class FoodsController extends Controller
     {
         return view('jualan.create');
     }
-    $makanan
 
     /**
      * Store a newly created resource in storage.
@@ -317,6 +316,8 @@ class FoodsController extends Controller
         }
 
         // add cart into bought
+        $randNumber = $this->generateBarcodeNumber();
+        $orderid = "ORDR".$randNumber;
         foreach ($oldCart->foods as $id => $cart) {
             $makanan = Food::findorFail($id);
             $quantity = $cart['qty'];
@@ -324,6 +325,7 @@ class FoodsController extends Controller
             $bought->seller_id = $cart['food']->user_id;
             $bought->buyer_id =  Auth::user()->id;
             $bought->food_id = $id;
+            $bought->order_no = $orderid;
             $bought->quantity = $cart['qty'];
             $bought->totalPrice = $cart['qty'] * $makanan->harga;
             $bought->save();
@@ -346,8 +348,7 @@ class FoodsController extends Controller
 
         $order->cart = serialize($cart);
         $order->totalPrice = $request->input('totalPrice');
-        $randNumber = $this->generateBarcodeNumber();
-        $order->order_no = "ORDR".$randNumber;
+        $order->order_no = $orderid;
 
         Auth::user()->orders()->save($order);
 

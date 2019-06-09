@@ -17,6 +17,7 @@ class CreateFoodBoughtTable extends Migration
             $table->increments('id');
             $table->integer('seller_id');
             $table->integer('buyer_id');
+            $table->string('order_no');
             $table->integer('food_id')->unsigned();
             $table->integer('quantity');
             $table->double('totalPrice');

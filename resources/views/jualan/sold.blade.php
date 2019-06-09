@@ -17,7 +17,8 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th width="15%">Buyer</th>
+                    <th width="15%">Buyer's Name</th>
+                    <th width="15%">Order No</th>
                     <th width="15%">Phone Number</th>
                     <th width="35%">Food's Name</th>
                     <th width="15%">Quantity</th>
@@ -28,6 +29,7 @@
                   @forelse($boughts as $bought)
                     <tr>
                       <td>{{ $bought->user2->name }}</td>  
+                      <td>{{ $bought->order_no }}</td>  
                       <td>{{ $bought->user2->profile->no_phone }}</td>  
                       <td>{{ $bought->food->nama_makanan }}</td>
                       <td>{{ $bought->quantity }}</td>
