@@ -23,8 +23,6 @@ class CreateProfilesTable extends Migration
             $table->string('location')->nullable();
             $table->timestamps();
 
-
-
             //foreign key
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

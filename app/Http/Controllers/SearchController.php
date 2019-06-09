@@ -21,33 +21,44 @@ class SearchController extends Controller
     public function find( Request $request)
     {
         $keyword=Input::get('keyword');
+        
         $lat = $request->latitude;
         $lng = $request->longitude;
+        $location = $request->location;
         $distance = 5;
 
-        if (is_null($lat)) {
+        if (is_null($lat) && !empty($location)) {
+            $foods = Food::where([
+                ['saiz_hidangan', '>', '0'],
+                ['nama_makanan', 'LIKE', "%$keyword%"],
+                ['location', 'LIKE', "%$location%"],
+            ])->orderBy('created_at', 'asc')->paginate(7);
+        } 
+        // elseif(!empty($lat))
+        // {
+        //     $query = Food::getByDistance($lat, $lng, $distance);
+
+        //     if(empty($query)) {
+        //         $foods = Food::where('saiz_hidangan', '>', '0')->orderBy('created_at', 'asc')->paginate(7);
+        //         return view('home', compact('foods'));
+        //     }
+
+        //     $ids = [];
+        //     foreach($query as $q)
+        //     {
+        //         array_push($ids, $q->id);
+        //     }
+        //     $foods = Food::whereIn('id', $ids)->where([
+        //     ['nama_makanan', 'LIKE', "%$keyword%"],
+        //     ['saiz_hidangan', '>', "0"],
+        //     ])->paginate(5);
+        // } 
+        else
+        {
             $foods = Food::where([
                 ['saiz_hidangan', '>', '0'],
                 ['nama_makanan', 'LIKE', "%$keyword%"],
             ])->orderBy('created_at', 'asc')->paginate(7);
-        } else
-        {
-            $query = Food::getByDistance($lat, $lng, $distance);
-
-            if(empty($query)) {
-                $foods = Food::where('saiz_hidangan', '>', '0')->orderBy('created_at', 'asc')->paginate(7);
-                return view('home', compact('foods'));
-            }
-
-            $ids = [];
-            foreach($query as $q)
-            {
-                array_push($ids, $q->id);
-            }
-            $foods = Food::whereIn('id', $ids)->where([
-            ['nama_makanan', 'LIKE', "%$keyword%"],
-            ['saiz_hidangan', '>', "0"],
-            ])->paginate(5);
         }
 
         return view('search.result', compact('foods'));

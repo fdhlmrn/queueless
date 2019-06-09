@@ -18,14 +18,11 @@ class CreateFoodBoughtTable extends Migration
             $table->integer('seller_id');
             $table->integer('buyer_id');
             $table->string('order_no');
+            $table->string('food_name');
             $table->integer('food_id')->unsigned();
             $table->integer('quantity');
             $table->double('totalPrice');
             $table->timestamps();
-
-            //foreignkey
-            $table->foreign('food_id')->references('id')->on('foods')->onDelete('cascade');
-
         });
     }
 

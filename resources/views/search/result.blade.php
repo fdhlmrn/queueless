@@ -17,7 +17,7 @@
                     <tr>
                         <th>Image</th>
                         <th>Food's Name</th>
-                        <th>Serving Size</th>
+                        <th>By</th>
                         <th>Price(RM)</th>
                         <th>Location</th>
                         <th></th>
@@ -35,13 +35,11 @@
                         </th>
                         <td>
                             <h5><strong>{{$food->nama_makanan}}</strong></h5>
-                            <p class="text-muted">by <a href="{{ action('ProfilesController@show', $food->user->id)}}"> {{ $food->user->name }}</p></a>
                             <small class="">{{ $food->created_at->diffForHumans() }}</small>
-
                         </td>
-                        <td>{{ $food->saiz_hidangan }}</td>
+                        <td>{{ $food->user->company->company_name }}</td>
                         <td>{{ $food->harga }}</td>
-                        <td>{{ $food->location}} </td>
+                        <td>{{ $food->user->company->location}} </td>
                         <td>
                         @if( $food->user_id == Auth::user()->id)
                                <a href="{{ action('FoodsController@edit', $food->id) }}" class="btn btn-info btn-sm">Edit</a>

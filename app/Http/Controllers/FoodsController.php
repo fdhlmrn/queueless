@@ -87,6 +87,7 @@ class FoodsController extends Controller
         $food->nama_makanan = $request->nama_makanan;
         $food->saiz_hidangan = $request->saiz_hidangan;
         $food->harga = $request->harga;
+        $food->location = Auth::user()->company->location;
         $food->user_id = Auth::user()->id;
 
         if ($request->hasFile('image')){
@@ -325,6 +326,7 @@ class FoodsController extends Controller
             $bought->seller_id = $cart['food']->user_id;
             $bought->buyer_id =  Auth::user()->id;
             $bought->food_id = $id;
+            $bought->food_name = $makanan->nama_makanan;
             $bought->order_no = $orderid;
             $bought->quantity = $cart['qty'];
             $bought->totalPrice = $cart['qty'] * $makanan->harga;
@@ -334,13 +336,13 @@ class FoodsController extends Controller
             $makanan->saiz_hidangan = $makanan->saiz_hidangan-$quantity; 
             $makanan->save();
 
-            $penjual = User::where('id', $bought->seller_id)->first();
-            $pembeli = User::where('id', $bought->buyer_id)->first();
+            $seller = User::where('id', $bought->seller_id)->first();
+            $buyer = User::where('id', $bought->buyer_id)->first();
             $food = Food::where('id', $bought->food_id)->first();
-            $jumlah = $bought->quantity;
+            $totalQuantity = $bought->quantity;
             $harga = $bought->totalPrice;
 
-            $penjual->notify(new EmelBought($penjual->name, $pembeli->name, $food->nama_makanan, $jumlah, $harga));
+            $seller->notify(new EmelBought($seller->name, $buyer->name, $food->nama_makanan, $totalQuantity, $harga));
 
         }
         $cart = new Cart($oldCart);

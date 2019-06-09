@@ -11,10 +11,10 @@ class EmelBought extends Notification
 {
     use Queueable;
 
-    protected $penjual;
-    protected $pembeli;
+    protected $seller;
+    protected $buyer;
     protected $food;
-    protected $jumlah;
+    protected $totalQuantity;
     protected $harga;
 
     /**
@@ -22,12 +22,12 @@ class EmelBought extends Notification
      *
      * @return void
      */
-    public function __construct($penjual, $pembeli, $food, $jumlah, $harga)
+    public function __construct($seller, $buyer, $food, $totalQuantity, $harga)
     {
-        $this->penjual = $penjual;
-        $this->pembeli = $pembeli;
+        $this->seller = $seller;
+        $this->buyer = $buyer;
         $this->food = $food;
-        $this->jumlah = $jumlah;
+        $this->totalQuantity = $totalQuantity;
         $this->harga = $harga;
 
     }
@@ -52,8 +52,8 @@ class EmelBought extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->greeting("Hello {$this->penjual}")
-                    ->line("{$this->pembeli} has bought {$this->jumlah} {$this->food} with a total of RM {$this->harga}")
+                    ->greeting("Hello {$this->seller}")
+                    ->line("{$this->buyer} has bought {$this->totalQuantity} {$this->food} with a total of RM {$this->harga}")
                     ->line('Thank you for using our application!');
     }
 

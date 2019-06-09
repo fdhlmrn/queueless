@@ -31,7 +31,7 @@
                       <td>{{ $bought->user2->name }}</td>  
                       <td>{{ $bought->order_no }}</td>  
                       <td>{{ $bought->user2->profile->no_phone }}</td>  
-                      <td>{{ $bought->food->nama_makanan }}</td>
+                      <td>{{ $bought->food_name }}</td>
                       <td>{{ $bought->quantity }}</td>
                       <td>{{ $bought->totalPrice }}</td>
                         </tr>
