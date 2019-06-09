@@ -118,9 +118,6 @@ class FoodsController extends Controller
         $food->nama_makanan = $request->nama_makanan;
         $food->saiz_hidangan = $request->saiz_hidangan;
         $food->harga = $request->harga;
-        $food->location = $request->location;
-        $food->latitude = $request->latitude;
-        $food->longitude = $request->longitude;
         $food->user_id = Auth::user()->id;
 
         if ($request->hasFile('image')){
@@ -182,9 +179,6 @@ class FoodsController extends Controller
         $food->nama_makanan = $request->nama_makanan;
         $food->saiz_hidangan = $request->saiz_hidangan;
         $food->harga = $request->harga;
-        $food->location = $request->location;
-        $food->latitude = $request->latitude;
-        $food->longitude = $request->longitude;
 
         if ($request->hasFile('image')){
           $this->validate($request, [
@@ -242,7 +236,7 @@ class FoodsController extends Controller
 
         // $foods = Food::with('state', 'district')->orderBy('created_at', 'desc')->paginate(7);
 
-        return redirect()->back('HomeController@index')->withMessage('Makanan telah dikemaskini');
+        return redirect()->action('HomeController@index')->withMessage('Makanan telah dikemaskini');
     }
 
     public function carthome(Request $request, $id)
@@ -353,6 +347,16 @@ class FoodsController extends Controller
         return view('shop.checkout', ['total' => $total]);
     }
 
+    public function generateBarcodeNumber() {
+        $number = mt_rand(1000000000, 9999999999); // better than rand()
+        $duplicate = Order::where('order_no', $number)->exists();
+        if (!$duplicate) {
+            return $number;
+        }
+        // otherwise, it's valid and can be used
+        return generateBarcodeNumber();
+    }
+
     public function postCheckout(Request $request) {
          if (!Session::has('cart')) {
             return view('shop.shopping-cart');
@@ -364,7 +368,7 @@ class FoodsController extends Controller
           $quantity = $cart['qty'];
 
           if ($makanan->saiz_hidangan < $quantity) {
-            return redirect()->back()->withErrors('Makanan dibeli orang lain');
+            return redirect()->back()->withErrors('Your food has been purchased');
           }
 
         }
@@ -406,6 +410,9 @@ class FoodsController extends Controller
         // dd($cart);
         $order->cart = serialize($cart);
         $order->totalPrice = $request->input('totalPrice');
+        $randNumber = $this->generateBarcodeNumber();
+        // dd($this->generateBarcodeNumber());
+        $order->order_no = "ORDR".$randNumber;
         // dd($order);
 
         Auth::user()->orders()->save($order);

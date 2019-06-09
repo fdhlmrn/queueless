@@ -23,22 +23,22 @@
 
                   <tr>
                     <th width="15%">Seller</th>
+                    <th width="15%">Order No.</th>
                     <th width="15%">Phone Number</th>
-                    <th width="15%">Address</th>
-                    <th width="25%">Location</th>
-                    <th width="35%">Food's Name</th>
-                    <th width="15%">Serving Size</th>
-                    <th width="15%">Price(RM)</th>
+                    <th width="20%">Location</th>
+                    <th width="15%">Food's Name</th>
+                    <th width="10%">Quantity</th>
+                    <th width="10%">Price(RM)</th>
                   </tr>
                 </thead>
                 <tbody pull-right>
 				@forelse ($order->cart->foods as $food)
 				{{-- {{dd($food['food']->user->name)}} --}}
                     <tr>
-                      <td>{{ $food['food']->user->name }}</td>  
-                      <td>{{ $food['food']->user->profile->no_phone }}</td>  
-                      <td>{{ $food['food']->user->profile->address }}</td>  
-                      <td>{{ $food['food']['location'] }}</td>
+                      <td>{{ $food['food']->user->name }}</td>
+                      <td>{{ $order->order_no }}</td>
+                      <td>{{ $food['food']->user->company->company_contact }}</td>  
+                      <td>{{ $food['food']->user->company->location }}</td>  
                       <td>{{ $food['food']['nama_makanan'] }}</td>
                       <td>{{ $food['qty'] }}</td>
                       <td>{{ $food['harga'] }}</td>

@@ -48,7 +48,7 @@ Route::group(['middleware'=> ['auth']], function() {
     Route::post('/search/find', 'SearchController@find');
 
     //profiles
-    Route::get('/profiles', 'ProfilesController@index');
+    Route::get('/profiles', 'ProfilesController@index')->name('profiles');
     Route::get('/profiles/{profile}/edit', 'ProfilesController@edit');
     Route::patch('/profiles/{profile}', 'ProfilesController@update');
     Route::get('/profiles/{user_id}/details', 'ProfilesController@show');

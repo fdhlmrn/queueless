@@ -13,7 +13,7 @@ class CreateFoodBoughtTable extends Migration
      */
     public function up()
     {
-        Schema::create('food_bought', function (Blueprint $table) {
+        Schema::create('boughts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('seller_id');
             $table->integer('buyer_id');
@@ -35,6 +35,6 @@ class CreateFoodBoughtTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('food_bought');
+        Schema::dropIfExists('boughts');
     }
 }

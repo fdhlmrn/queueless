@@ -4,7 +4,7 @@
 @section('content')
   <div class="panel panel-default">
     <div class="panel-heading">
-    <div class="tim-typo"><h2>List of Items</h2></div>
+    <div class="tim-typo"><h2>All foods</h2></div>
 
       </div>
       <div class="panel-body">
@@ -18,8 +18,8 @@
                       <thead>
                           <tr>
                               <th>Image</th>
-                              <th>Item's name</th>
-                              <th>Item's Quantity</th>
+                              <th>Food's name</th>
+                              <th>By</th>
                               <th>Price(RM)</th>
                               <th>Location</th>
                               <th></th>
@@ -48,10 +48,9 @@
                                   <small class="">{{ $food->created_at->diffForHumans() }}</small>
 
                               </td>
-                              <td>{{ $food->saiz_hidangan }}</td>
+                              <td>{{ $food->user->company->company_name }}</td>
                               <td>{{ $food->harga }}</td>
-                              <td>{{ $food->user->profile->address }},
-                              <br>{{ $food->location}}</td>
+                              <td>{{ $food->user->company->location}}</td>
                               <td>
                                   @if( $food->user_id == Auth::user()->id)
                                      <a href="{{ action('FoodsController@edit', $food->id) }}" class="btn btn-info btn-sm">Edit</a>

@@ -15,9 +15,11 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table){
             $table->increments('id');
-            $table->timestamps();
+            $table->string('order_no');
             $table->integer('user_id')->unsigned();
+            $table->double('totalPrice');
             $table->text('cart');
+            $table->timestamps();
 
             //foreign key
 

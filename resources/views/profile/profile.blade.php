@@ -20,8 +20,9 @@
               <br>
               <h4><i class="fa fa-phone"></i> {{$profile->no_phone}}</h4>
               <br>
-              <h4><i class="fa fa-home"></i>  {{$profile->address}} <br>
-              {{$profile->location}},
+              @if(!$profile->user->company == null)
+              <h4><i class="fa fa-home"></i>  {{$profile->user->company->location}} <br>
+              @endif
               <br>
               <br>
               <br>

@@ -5,8 +5,10 @@
 
  <div class="panel panel-default">
     <div class="panel-heading">
-      <h2>Sold Foods</h2>
-
+        <h2>Sold Food
+          <a href="{{ url('/foods/create') }}" class="btn btn-info pull-right" role="button">Add New Food</a>
+          <a href="{{ url('/foods') }}" class="btn btn-info pull-right" role="button">Sales</a></h2>
+  
       </div>
       <div class="panel-body">
         <div class="row">
@@ -18,7 +20,7 @@
                     <th width="15%">Buyer</th>
                     <th width="15%">Phone Number</th>
                     <th width="35%">Food's Name</th>
-                    <th width="15%">Serving Size</th>
+                    <th width="15%">Quantity</th>
                     <th width="15%">Price(RM)</th>
                   </tr>
                 </thead>
