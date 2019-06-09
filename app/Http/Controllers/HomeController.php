@@ -27,14 +27,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // $foods = Food::with('state', 'district')->orderBy('created_at', 'desc')->paginate(7);
-
         $foods = Food::where('saiz_hidangan', '>', '0')->orderBy('created_at', 'asc')->paginate(7);
-        // dd($foods);
-        // dd($foods)
+        
         return view('home', compact('foods'));
-
-
     }
 
     public function error()

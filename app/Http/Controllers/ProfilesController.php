@@ -27,7 +27,6 @@ class ProfilesController extends Controller
         $user = User::where('id', Auth::user()->id)->first();
         $reviews = Review::where('profile_id', Auth::user()->id)->get()->sortByDesc('created_at');
         $profiles = Profile::where('user_id', Auth::user()->id)->get();
-        // dd($profiles);
         return view ('profile.profile', compact('profiles'))->with('reviews', $reviews)->with('user', $user)->with('usernow', $nowOnline);
     }
 
@@ -63,10 +62,7 @@ class ProfilesController extends Controller
         $user = User::where('id', $id)->first();
         $nowOnline = User::where('id', Auth::user()->id)->first();
 
-        // dd($profiles);
         return view ('profile.details', compact('profile'))->with('reviews', $reviews)->with('user', $user)->with('usernow', $nowOnline);
-
-
     }
 
     /**
@@ -77,7 +73,6 @@ class ProfilesController extends Controller
      */
     public function edit($id)
     {
-        //
         $user = User::where('id', Auth::user()->id)->first();
         $profile = Profile::findorFail($id);
         return view('profile.editprofile', compact('profile'))->with('user', $user);
@@ -94,14 +89,13 @@ class ProfilesController extends Controller
     {
         $user = User::findOrFail($id);
         $profile = Profile::where('user_id', $id)->first();
-          $user->name = $request->name;
-          $user->email = $request->email;
-          $profile->no_phone = $request->no_phone;
-          $profile->address = $request->address;
-          $profile->location = $request->location;
-          $profile->latitude = $request->latitude;
-          $profile->longitude = $request->longitude;
-          // dd($profile);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $profile->no_phone = $request->no_phone;
+        $profile->address = $request->address;
+        $profile->location = $request->location;
+        $profile->latitude = $request->latitude;
+        $profile->longitude = $request->longitude;
 
         if ($request->hasFile('image')){
           $this->validate($request, [
@@ -111,13 +105,11 @@ class ProfilesController extends Controller
           $request->image->move(public_path('images/user/'), $image);
           $user->image = $image;
         }
-        // dd($user);
 
-          $user->save();
-          $profile->save();
+        $user->save();
+        $profile->save();
 
         return redirect()->action('ProfilesController@index')->withMessage('Profile has been successfully updated');
-
     }
 
     /**
@@ -131,32 +123,26 @@ class ProfilesController extends Controller
         //
     }
 
-    public function getOrder() {
+    public function getOrder()
+    {
         $orders = Auth::user()->orders;
         $orders->transform(function($order, $key) {
             $order->cart = unserialize($order->cart);
             return $order;
         });
-        // dd($orders);
+
         return view('profile.order', compact('orders'));
     }
 
-    public function getBought() {
-
-
+    public function getBought()
+    {
         $boughts = Bought::where('seller_id',  Auth::user()->id)->get()->sortByDesc('created_at');
-        // $user = Auth::user()->id;
-        // $bought = Bought::where('seller_id', '=', '6')->get();
-        // dd($user);
 
-        // foreach ($boughts as $bought) {
-        //     dd($bought->user);
-        // }
-        // // dd($boughts->user);
         return view('jualan.sold', compact('boughts'));
     }
 
-    public function testEmel($id){
+    public function testEmel($id)
+    {
         $boughts = Bought::where('seller_id',  Auth::user()->id)->get()->sortByDesc('created_at');
         foreach ($boughts as $bought) {
             $buyer = User::where('id', $bought->buyer_id)->first();

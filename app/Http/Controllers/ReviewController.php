@@ -17,11 +17,9 @@ class ReviewController extends Controller
      */
     public function index($id)
     {
-        //
         $user = User::where('id', Auth::user()->id)->first();
         $profile = Profile::findOrFail($id);
-        // dd($profile);
-        // dd($user);
+
         return view ('profile.comment', compact('profile'))->with('user', $user);
     }
 
@@ -43,19 +41,14 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        //
-
         $review = new Review;
         $review->title = $request->title;
         $review->content = $request->content;
         $review->user_id = Auth::user()->id;
         $review->profile_id = $request->profile;
-        // dd($review);
         $review->save();
 
         return redirect()->action('ProfilesController@show', $review->profile->id)->withMessage('Comment added');
-
-
     }
 
     /**
@@ -104,8 +97,7 @@ class ReviewController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //        
+    {    
         $review = Review::findOrFail($id);
         $review->delete();
         return back()->withError('Comment has been deleted');

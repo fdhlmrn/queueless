@@ -31,15 +31,7 @@ class FoodsController extends Controller
         $tests = Order::where('user_id', $user->id)->get()->groupBy(function ($date) {
           return Carbon::parse($date->created_at)->format('m');
         });
-        // $orders = Order::selectRaw('month(created_at) as month, totalPrice as total')->whereUserId(auth()->id())->groupBy('month', 'total')->sum('total');
         $orders = \DB::table('orders')->selectRaw('SUM(totalPrice) as total, MONTH(created_at) as month')->whereUserId(auth()->id())->groupBy('month')->get();
-        // dd($orders);
-
-
-        // $sum = $tests->sum(function($test){
-        //   return $test->sum('totalPrice');
-        // });
-        // dd($sum);
 
         return view('chart', ['chart' => $chart]);
 
@@ -60,7 +52,6 @@ class FoodsController extends Controller
 
     public function registerCompany(Request $request)
     {
-        // dd($request);
         $company = new Company;
         $company->company_name = $request->company_name;
         $company->company_contact = $request->company_contact;
@@ -68,7 +59,6 @@ class FoodsController extends Controller
         $company->latitude = $request->latitude;
         $company->longitude = $request->longitude;
         $company->user_id = Auth::user()->id;
-
         $company->save();
 
         return redirect()->action('FoodsController@index')->withMessage('Company registered!');
@@ -82,29 +72,9 @@ class FoodsController extends Controller
      */
     public function create()
     {
-        //
-        // $states = State::all();
-
         return view('jualan.create');
-
     }
-
-    // public function ajax()
-    // {
-    //   $state_id = Input::get('state_id');
-    //   $district = District::where('state_id', '=', $state_id)->get();
-
-    //   return \Response::json($district);
-    // }
-
-    // public function ajax2()
-    // {
-      
-    //   $state_id = Input::get('state_id');
-    //   $district = District::where('state_id', '=', $state_id)->get();
-
-    //   return \Response::json($district);
-    // }
+    $makanan
 
     /**
      * Store a newly created resource in storage.
@@ -131,7 +101,6 @@ class FoodsController extends Controller
         $food->save();
 
         return redirect()->action('FoodsController@store')->withMessage('Food has been added');
-
     }
 
     /**
@@ -154,7 +123,6 @@ class FoodsController extends Controller
     public function edit($id)
     {
         //
-
         $food = Food::findOrFail($id);
         return view('jualan.edit', compact('food'));
     }
@@ -168,18 +136,15 @@ class FoodsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $this->validate($request, [
           'nama_makanan' => 'required',
           'saiz_hidangan' => 'required',
           'harga' => 'required',
-
         ]);
         $food = Food::findOrFail($id);
         $food->nama_makanan = $request->nama_makanan;
         $food->saiz_hidangan = $request->saiz_hidangan;
         $food->harga = $request->harga;
-
         if ($request->hasFile('image')){
           $this->validate($request, [
                 'image' => 'required|image'
@@ -188,7 +153,6 @@ class FoodsController extends Controller
           $request->image->move(public_path('images/foods/'), $image);
           $food->image = $image;
         }
-
         $food->save();
 
         return redirect()->action('FoodsController@index')->withMessage('Your food has been updated');
@@ -202,11 +166,9 @@ class FoodsController extends Controller
      */
     public function destroy($id)
     {
-        //
         $food = Food::findOrFail($id);
         $food->delete();
         return back()->withError('Post has been deleted');
-
     }
 
     public function cart(Request $request, $id)
@@ -216,27 +178,18 @@ class FoodsController extends Controller
         $cart = new Cart($oldCart);
       
         if (!is_null($cart->foods)) {
-          // dd($cart);
           foreach ($cart->foods as $key => $value) {
-          // dd($cart);
           $makanan = Food::findorFail($id);
-          // dd($cart['food']->user_id);
           $quantity = $value['qty'];
-          // dd($quantity);
-          // dd($quantity, $makanan->saiz_hidangan);
-              // dd($quantity > $makanan->saiz_hidangan);
           if (($key == $id) && ($quantity >= $makanan->saiz_hidangan))
-            return redirect()->action('HomeController@index')->withErrors("Jumlah {$makanan->nama_makanan} tidak mencukupi");
+            return redirect()->action('HomeController@index')->withErrors("Number of {$makanan->nama_makanan} is not enough");
           }
         }
-        // dd($food);
-        $cart->add($food, $food->id);
 
+        $cart->add($food, $food->id);
         $request->session()->put('cart', $cart);
 
-        // $foods = Food::with('state', 'district')->orderBy('created_at', 'desc')->paginate(7);
-
-        return redirect()->action('HomeController@index')->withMessage('Makanan telah dikemaskini');
+        return redirect()->action('HomeController@index')->withMessage('Food updated');
     }
 
     public function carthome(Request $request, $id)
@@ -246,26 +199,17 @@ class FoodsController extends Controller
         $cart = new Cart($oldCart);
       
         if (!is_null($cart->foods)) {
-          // dd($cart);
           foreach ($cart->foods as $key => $value) {
-          // dd($cart['qty']);
           $makanan = Food::findorFail($id);
-          // dd($cart['food']->user_id);
           $quantity = $value['qty'];
-          // dd($quantity, $makanan->saiz_hidangan);
-              // dd($quantity > $makanan->saiz_hidangan);
           if ($quantity >= $makanan->saiz_hidangan)
-            return redirect()->back()->withErrors("Jumlah {$makanan->nama_makanan} tidak mencukupi");
+            return redirect()->back()->withErrors("Number of {$makanan->nama_makanan} is not enough");
           }
         }
-        // dd($food);
         $cart->add($food, $food->id);
-
         $request->session()->put('cart', $cart);
 
-        // $foods = Food::with('state', 'district')->orderBy('created_at', 'desc')->paginate(7);
-
-        return redirect()->action('FoodsController@getCart')->withMessage('Makanan telah dikemaskini');
+        return redirect()->action('FoodsController@getCart')->withMessage('Food updated');
     }
 
     public function getReduceByOne($id) {
@@ -274,7 +218,7 @@ class FoodsController extends Controller
 
         if (!Session::has('cart')) {
 
-        return redirect()->route('home')->withErrors('Tiada makanan untuk dibuang');
+        return redirect()->route('home')->withErrors('No food to remove');
         }
 
         $cart->reduceByOne($id);
@@ -296,7 +240,7 @@ class FoodsController extends Controller
         //bila cart kosong tapi nak remove jgk
         if (!Session::has('cart')) {
 
-        return redirect()->route('home')->withErrors('Tiada makanan untuk dibuang');
+        return redirect()->route('home')->withErrors('No food to remove');
         }
 
         $cart->reduceByOne($id);
@@ -308,7 +252,7 @@ class FoodsController extends Controller
 
         }
 
-        return redirect()->route('home')->withMessage('Makanan dibuang');
+        return redirect()->route('home')->withMessage('Food removed');
     }
 
     public function getRemoveItem($id) {
@@ -348,12 +292,11 @@ class FoodsController extends Controller
     }
 
     public function generateBarcodeNumber() {
-        $number = mt_rand(1000000000, 9999999999); // better than rand()
-        $duplicate = Order::where('order_no', $number)->exists();
+        $number = mt_rand(1000000000, 9999999999); // get random number
+        $duplicate = Order::where('order_no', $number)->exists(); // find duplicate
         if (!$duplicate) {
-            return $number;
+            return $number; //check duplicate
         }
-        // otherwise, it's valid and can be used
         return generateBarcodeNumber();
     }
 
@@ -372,52 +315,43 @@ class FoodsController extends Controller
           }
 
         }
+
+        // add cart into bought
         foreach ($oldCart->foods as $id => $cart) {
-          // dd($cart['qty']);
-          $makanan = Food::findorFail($id);
-          // dd($cart['food']->user_id);
-          $quantity = $cart['qty'];
+            $makanan = Food::findorFail($id);
+            $quantity = $cart['qty'];
+            $bought = new Bought;
+            $bought->seller_id = $cart['food']->user_id;
+            $bought->buyer_id =  Auth::user()->id;
+            $bought->food_id = $id;
+            $bought->quantity = $cart['qty'];
+            $bought->totalPrice = $cart['qty'] * $makanan->harga;
+            $bought->save();
 
-          // $harga = $food->harga;
-          // dd($harga);
-          $bought = new Bought;
-          $bought->seller_id = $cart['food']->user_id;
-          $bought->buyer_id =  Auth::user()->id;
-          $bought->food_id = $id;
-          $bought->quantity = $cart['qty'];
-          $bought->totalPrice = $cart['qty'] * $makanan->harga;
+            //call food to reduce quantity
+            $makanan->saiz_hidangan = $makanan->saiz_hidangan-$quantity; 
+            $makanan->save();
 
-          $bought->save();
+            $penjual = User::where('id', $bought->seller_id)->first();
+            $pembeli = User::where('id', $bought->buyer_id)->first();
+            $food = Food::where('id', $bought->food_id)->first();
+            $jumlah = $bought->quantity;
+            $harga = $bought->totalPrice;
 
-
-           $makanan->saiz_hidangan = $makanan->saiz_hidangan-$quantity; 
-           $makanan->save();
-
-           $penjual = User::where('id', $bought->seller_id)->first();
-           $pembeli = User::where('id', $bought->buyer_id)->first();
-           $food = Food::where('id', $bought->food_id)->first();
-           $jumlah = $bought->quantity;
-           $harga = $bought->totalPrice;
-
-           $penjual->notify(new EmelBought($penjual->name, $pembeli->name, $food->nama_makanan, $jumlah, $harga));
+            $penjual->notify(new EmelBought($penjual->name, $pembeli->name, $food->nama_makanan, $jumlah, $harga));
 
         }
         $cart = new Cart($oldCart);
-        // dd($cart);
-
         $order = new Order();
 
-        // dd($cart);
         $order->cart = serialize($cart);
         $order->totalPrice = $request->input('totalPrice');
         $randNumber = $this->generateBarcodeNumber();
-        // dd($this->generateBarcodeNumber());
         $order->order_no = "ORDR".$randNumber;
-        // dd($order);
 
         Auth::user()->orders()->save($order);
 
-
+        // clear session
         Session::forget('cart');
         return redirect()->action('HomeController@index')->withMessage('Your food has been purchased');    
     }
